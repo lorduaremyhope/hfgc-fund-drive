@@ -53,3 +53,27 @@ footer { text-align:center; padding:24px; color:var(--soft); }
 .admin-add-grid { grid-template-columns:repeat(4,1fr); }
 .admin-add-grid button { grid-column:1 / -1; }
 @media (max-width:850px) { .hero{display:block;padding:28px 24px;text-align:center}.hero h1{font-size:32px}.hero h2{font-size:28px}.qr-box{margin-top:24px}.container,.login-page,.admin-container{display:block;padding:24px}.card{margin-bottom:18px}.summary,.admin-grid,.admin-add-grid,.progress-breakdown{grid-template-columns:1fr}table{font-size:13px} }
+.bank-details label {
+  color: #111 !important;
+  font-weight: 800;
+}
+
+.bank-details input[type="file"] {
+  background: #ffffff;
+  color: #111;
+  border: 2px solid #6b1fb1;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.bank-details input[type="file"]::file-selector-button {
+  background: #6b1fb1;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-right: 12px;
+}
