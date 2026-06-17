@@ -1,0 +1,12 @@
+{
+  "name": "hfgc-real-netlify-supabase",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static build ready'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

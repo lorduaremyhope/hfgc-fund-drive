@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HFGC Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="admin-top">
+  <h1>HFGC Admin Dashboard</h1>
+  <div>
+    <a class="button-link" href="index.html">View Public Page</a>
+    <button onclick="logoutAdmin()">Logout</button>
+  </div>
+</header>
+
+<main class="admin-container">
+  <section class="admin-grid">
+    <div class="admin-stat"><span>Total Received</span><strong id="adminReceived">€0.00</strong></div>
+    <div class="admin-stat"><span>Total Pending</span><strong id="adminPending">€0.00</strong></div>
+    <div class="admin-stat"><span>Fund Goal</span><strong id="adminGoal">€250,000.00</strong></div>
+    <div class="admin-stat"><span>Total Entries</span><strong id="adminCount">0</strong></div>
+  </section>
+
+  <section class="card">
+    <h2>Admin Controls</h2>
+    <div class="control-row">
+      <form id="goalForm">
+        <input id="goalInput" type="number" step="0.01" placeholder="Fund goal">
+        <button>Update Goal</button>
+      </form>
+      <button id="toggleProgressBtn">Hide/Show Live Progress</button>
+      <button id="toggleLeaderboardBtn">Hide/Show Leaderboard</button>
+    </div>
+    <p>Live Progress: <strong id="progressStatus"></strong></p>
+    <p>Leaderboard: <strong id="leaderboardStatus"></strong></p>
+  </section>
+
+  <section class="card">
+    <h2>Add Entry Manually</h2>
+    <form id="adminAddForm" class="admin-add-grid">
+      <input id="adminName" placeholder="Name" required>
+      <select id="adminDistrict" required><option value="">Select District</option></select>
+      <input id="adminOtherDistrict" class="admin-conditional" placeholder="Type Other District">
+      <select id="adminLocale" required><option value="">Select District First</option></select>
+      <input id="adminOtherLocale" class="admin-conditional" placeholder="Type Other Locale">
+      <input id="adminAmount" type="number" step="0.01" placeholder="Amount" required>
+      <select id="adminPayment" required>
+        <option>CASH</option><option>BANK TRANSFER</option><option>PLEDGE</option>
+        <option>CHECK</option><option>CARD</option><option>OTHER</option>
+      </select>
+      <input id="adminPledgeDate" type="date" class="admin-conditional" title="Pledge Giving Date">
+      <select id="adminStatus" required><option>Pending</option><option>Received</option></select>
+      <input id="adminNote" placeholder="Note">
+      <button>Add Entry</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Donation Entries</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>District</th><th>Locale</th><th>Amount</th><th>Payment</th>
+            <th>Pledge Date</th><th>Status</th><th>Proof</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminRows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+<script>initAdminPage();</script>
+</body>
+</html>

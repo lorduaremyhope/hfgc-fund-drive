@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HFGC 2026 Fund Drive</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-text">
+    <h1>HOME FREE GLOBAL CRUSADE</h1>
+    <h2>HFGC 2026 Fund Drive</h2>
+    <p>EUROPE REGION</p>
+    <a class="button-link" href="login.html">Admin Dashboard</a>
+  </div>
+
+  <div class="qr-box">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://europehfgcfunddrive2026.netlify.app/" alt="HFGC 2026 QR Code" />
+    <p>Scan to Open Fund Drive Page</p>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card form-card">
+    <h2>Give & Register Your Support</h2>
+    <p class="lead">Submit your name, district, locale, amount, payment method, and note.</p>
+
+    <form id="donationForm">
+      <label>Name
+        <input type="text" id="name" placeholder="Complete Name" required>
+      </label>
+
+      <label>District
+        <select id="district" required><option value="">Select District</option></select>
+      </label>
+
+      <label id="otherDistrictWrap" class="conditional-field">Type Other District
+        <input type="text" id="otherDistrict" placeholder="Type district name">
+      </label>
+
+      <label>Locale
+        <select id="locale" required><option value="">Select District First</option></select>
+      </label>
+
+      <label id="otherLocaleWrap" class="conditional-field">Type Other Locale
+        <input type="text" id="otherLocale" placeholder="Type locale name">
+      </label>
+
+      <label>Amount
+        <input type="number" id="amount" min="1" step="0.01" placeholder="Amount" required>
+      </label>
+
+      <label>Payment Method
+        <select id="payment_method" required>
+          <option value="">Select Payment Method</option>
+          <option>CASH</option>
+          <option>BANK TRANSFER</option>
+          <option>PLEDGE</option>
+          <option>CHECK</option>
+          <option>CARD</option>
+          <option>OTHER</option>
+        </select>
+      </label>
+
+      <div id="bankDetails" class="bank-details">
+        <h2>Bank Transfer Details</h2>
+        <h3>🇪🇸 Madrid Spain Bank (EUR)</h3>
+        <p><strong>Account Name:</strong><br>IGLESIA MISIONERA PENTECOSTAL DE CRISTO ULTIMO DIA</p>
+        <p><strong>IBAN:</strong><br>ES83 0049 6129 0724 9500 6227 023</p>
+        <hr>
+        <h3>🇮🇹 Milan Italy Bank (EUR)</h3>
+        <p><strong>Account Name:</strong><br>La Chiesa Di Cristo Della Missione Di Pentecoste Internazionale</p>
+        <p><strong>Delegate:</strong><br>Mereniza Ozaeta</p>
+        <p><strong>BIC/SWIFT:</strong><br>BICTITMM</p>
+        <p><strong>IBAN:</strong><br>IT15F0306909606100000019055</p>
+        <hr>
+        <h3>🇬🇧 United Kingdom Bank (GBP)</h3>
+        <p><strong>Account Name:</strong><br>PMCC 4TH WATCH</p>
+        <p><strong>Account Number:</strong><br>12194619</p>
+        <p><strong>Sort Code:</strong><br>40-15-05</p>
+
+        <label>Upload Screenshot / Photo Proof
+          <input type="file" id="proof" accept="image/*,.pdf">
+        </label>
+      </div>
+
+      <label id="pledgeDateWrap" class="conditional-field">Pledge Giving Date
+        <input type="date" id="pledgeDate">
+      </label>
+
+      <label>Note
+        <textarea id="note" placeholder="Your note"></textarea>
+      </label>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="success" class="success" style="display:none;">Thank you! Your entry has been submitted as Pending.</div>
+  </section>
+
+  <section id="progressCard" class="card">
+    <div class="leader-header">
+      <h2>Live Progress</h2>
+      <label class="mini-select">View
+        <select id="progressView">
+          <option value="summary">Summary</option>
+          <option value="payment">Payment Method Breakdown</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="progressSummaryView">
+      <div class="big" id="liveTotal">€0.00</div>
+      <p><span id="progressPercent">0</span>% of <span id="goalText">€250,000.00</span> goal</p>
+      <div class="bar"><span id="progressBar"></span></div>
+
+      <div class="progress-breakdown">
+        <div><span>Received Total</span><strong id="receivedTotal">€0.00</strong></div>
+        <div><span>Pending Total</span><strong id="pendingTotal">€0.00</strong></div>
+        <div><span>Overall Total</span><strong id="overallTotal">€0.00</strong></div>
+        <div><span>Total Entries</span><strong id="totalEntriesProgress">0</strong></div>
+      </div>
+    </div>
+
+    <div id="paymentBreakdownView" style="display:none;">
+      <h3>Payment Method Breakdown</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Payment Method</th><th>Received</th><th>Pending</th><th>Total</th></tr></thead>
+          <tbody id="paymentBreakdownRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="leaderboardCard" class="card wide">
+    <div class="leader-header">
+      <h2>Donation List / Leaderboard</h2>
+      <div class="sort-box">
+        <label>Filter / Sort List
+          <select id="sortMode">
+            <option value="highest">Highest to Lowest</option>
+            <option value="lowest">Lowest to Highest</option>
+            <option value="district">Per District Total</option>
+            <option value="locale">Per Locale Total</option>
+            <option value="az">Alphabetical A-Z</option>
+            <option value="za">Alphabetical Z-A</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div><span>Total Entries</span><strong id="totalEntries">0</strong></div>
+      <div><span>Total Amount</span><strong id="totalAmount">€0.00</strong></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead id="tableHead"></thead>
+        <tbody id="donationRows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer><p>HFGC 2026 Fund Drive · Europe Region</p></footer>
+
+<script src="app.js"></script>
+<script>initPublicPage();</script>
+</body>
+</html>
