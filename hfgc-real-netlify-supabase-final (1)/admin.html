@@ -58,7 +58,16 @@
   </section>
 
   <section class="card">
-    <h2>Donation Entries</h2>
+    <div class="leader-header">
+      <h2>Donation Entries</h2>
+      <div class="export-actions">
+        <button type="button" onclick="exportAdminCSV()">Export Excel / CSV</button>
+        <button type="button" onclick="exportAdminGoogleSheet()">Open Google Sheets</button>
+      </div>
+    </div>
+    <p class="small-note">
+      “Export Excel / CSV” downloads a spreadsheet file you can open in Excel or upload to Google Sheets.
+    </p>
     <div class="table-wrap">
       <table>
         <thead>

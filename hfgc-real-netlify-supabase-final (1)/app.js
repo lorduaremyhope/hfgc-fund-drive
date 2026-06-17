@@ -325,7 +325,80 @@ async function viewProof(id) {
   else w.document.write(`<img src="${data.proof}" style="max-width:100%;height:auto">`);
 }
 
+
+async function getAdminExportRows() {
+  const data = await adminApi("admin", {}, "GET");
+  return data.entries || [];
+}
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+async function exportAdminCSV() {
+  try {
+    const rows = await getAdminExportRows();
+
+    const headers = [
+      "Name",
+      "District",
+      "Locale",
+      "Amount",
+      "Payment Method",
+      "Pledge Date",
+      "Status",
+      "Note",
+      "Created At",
+      "Has Proof"
+    ];
+
+    const csvRows = [
+      headers.map(csvEscape).join(","),
+      ...rows.map(row => [
+        row.name,
+        row.district,
+        row.locale,
+        Number(row.amount || 0).toFixed(2),
+        row.payment_method,
+        row.pledge_date || "",
+        row.status || "Pending",
+        row.note || "",
+        row.created_at || "",
+        row.proof ? "Yes" : "No"
+      ].map(csvEscape).join(","))
+    ];
+
+    const blob = new Blob(["\ufeff" + csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const today = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `hfgc-fund-drive-donations-${today}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("Export failed: " + error.message);
+  }
+}
+
+async function exportAdminGoogleSheet() {
+  try {
+    await exportAdminCSV();
+    window.open("https://sheets.new", "_blank");
+  } catch (error) {
+    alert("Google Sheets export failed: " + error.message);
+  }
+}
+
 window.logoutAdmin = logoutAdmin;
 window.setStatus = setStatus;
 window.deleteEntry = deleteEntry;
 window.viewProof = viewProof;
+window.exportAdminCSV = exportAdminCSV;
+window.exportAdminGoogleSheet = exportAdminGoogleSheet;
