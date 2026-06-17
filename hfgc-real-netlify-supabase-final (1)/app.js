@@ -33,8 +33,8 @@ function fileToDataUrl(file) {
 function calculateTotals(entries) {
   const received = entries.filter(e => e.status === "Received");
   const pending = entries.filter(e => e.status !== "Received");
-  const receivedTotal = received.reduce((sum, e) => sum + Number(e.amount || 0), 0);
-  const pendingTotal = pending.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+  const receivedTotal = received.reduce((sum, e) => sum + Number((e.eur_amount ?? e.amount) || 0), 0);
+  const pendingTotal = pending.reduce((sum, e) => sum + Number((e.eur_amount ?? e.amount) || 0), 0);
   return { receivedTotal, pendingTotal, total: receivedTotal + pendingTotal };
 }
 
@@ -43,7 +43,7 @@ function groupTotals(entries, key) {
   entries.forEach(entry => {
     const groupName = entry[key] || "Other";
     if (!grouped[groupName]) grouped[groupName] = { name: groupName, total: 0, count: 0 };
-    grouped[groupName].total += Number(entry.amount || 0);
+    grouped[groupName].total += Number((entry.eur_amount ?? entry.amount) || 0);
     grouped[groupName].count += 1;
   });
   return Object.values(grouped).sort((a, b) => b.total - a.total);
@@ -119,6 +119,7 @@ async function initPublicPage() {
           district: finalDistrict,
           locale: finalLocale,
           amount: Number(document.getElementById("amount").value || 0),
+          currency: document.getElementById("currency").value,
           payment_method: paymentMethod.value,
           pledge_date: paymentMethod.value === "PLEDGE" ? pledgeDate.value : "",
           note: document.getElementById("note").value.trim(),
@@ -188,8 +189,8 @@ async function renderPublicList() {
     if (mode === "za") return b.name.localeCompare(a.name);
     return Number(b.amount) - Number(a.amount);
   });
-  tableHead.innerHTML = `<tr><th>Rank</th><th>Name</th><th>District</th><th>Locale</th><th>Amount</th><th>Status</th></tr>`;
-  rowsEl.innerHTML = sorted.length ? sorted.map((e, i) => `<tr><td>${i+1}</td><td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${euro(e.amount)}</td><td>${safe(e.status || "Pending")}</td></tr>`).join("") : '<tr><td colspan="6" class="empty">No entries yet.</td></tr>';
+  tableHead.innerHTML = `<tr><th>Rank</th><th>Name</th><th>District</th><th>Locale</th><th>Original Amount</th><th>EUR Amount</th><th>Status</th></tr>`;
+  rowsEl.innerHTML = sorted.length ? sorted.map((e, i) => `<tr><td>${i+1}</td><td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${safe(e.currency || "EUR")} ${Number(e.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td><td>${euro(e.eur_amount ?? e.amount)}</td><td>${safe(e.status || "Pending")}</td></tr>`).join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
 }
 
 function initLoginPage() {
@@ -268,6 +269,7 @@ async function initAdminPage() {
       district: finalDistrict,
       locale: finalLocale,
       amount: Number(document.getElementById("adminAmount").value || 0),
+      currency: document.getElementById("adminCurrency").value,
       payment_method: adminPayment.value,
       pledge_date: adminPayment.value === "PLEDGE" ? adminPledgeDate.value : "",
       status: document.getElementById("adminStatus").value,
@@ -310,7 +312,7 @@ async function renderAdmin() {
           <button onclick="setStatus('${e.id}', 'Pending')">Pending</button>
           <button class="danger-btn small-btn" onclick="deleteEntry('${e.id}')">Delete</button>
         </td>
-      </tr>`).join("") : '<tr><td colspan="9" class="empty">No entries yet.</td></tr>';
+      </tr>`).join("") : '<tr><td colspan="10" class="empty">No entries yet.</td></tr>';
   } catch (error) {
     location.href = "login.html";
   }
@@ -344,7 +346,10 @@ async function exportAdminCSV() {
       "Name",
       "District",
       "Locale",
-      "Amount",
+      "Original Amount",
+      "Currency",
+      "EUR Amount",
+      "Exchange Rate",
       "Payment Method",
       "Pledge Date",
       "Status",
@@ -360,6 +365,9 @@ async function exportAdminCSV() {
         row.district,
         row.locale,
         Number(row.amount || 0).toFixed(2),
+        row.currency || "EUR",
+        Number((row.eur_amount ?? row.amount) || 0).toFixed(2),
+        row.exchange_rate || 1,
         row.payment_method,
         row.pledge_date || "",
         row.status || "Pending",
@@ -396,9 +404,23 @@ async function exportAdminGoogleSheet() {
   }
 }
 
+
+async function runAdminConverter() {
+  try {
+    const amount = Number(document.getElementById("converterAmount").value || 0);
+    const currency = document.getElementById("converterCurrency").value;
+    const data = await adminApi(`convert?amount=${encodeURIComponent(amount)}&currency=${encodeURIComponent(currency)}`, {}, "GET");
+    document.getElementById("converterResult").textContent = euro(data.eur_amount);
+  } catch (error) {
+    alert("Converter failed: " + error.message);
+  }
+}
+
 window.logoutAdmin = logoutAdmin;
 window.setStatus = setStatus;
 window.deleteEntry = deleteEntry;
 window.viewProof = viewProof;
 window.exportAdminCSV = exportAdminCSV;
 window.exportAdminGoogleSheet = exportAdminGoogleSheet;
+
+window.runAdminConverter = runAdminConverter;

@@ -22,3 +22,15 @@ alter table public.donations add column if not exists created_at timestamptz def
 
 alter table public.settings enable row level security;
 alter table public.donations enable row level security;
+
+
+-- Currency support
+alter table public.donations add column if not exists currency text default 'EUR';
+alter table public.donations add column if not exists eur_amount numeric(12,2);
+alter table public.donations add column if not exists exchange_rate numeric(18,8) default 1;
+
+update public.donations
+set currency = coalesce(currency, 'EUR'),
+    eur_amount = coalesce(eur_amount, amount),
+    exchange_rate = coalesce(exchange_rate, 1)
+where eur_amount is null or currency is null or exchange_rate is null;
