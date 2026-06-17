@@ -309,8 +309,14 @@ async function renderAdmin() {
     const sorted = entries.slice().sort((a,b) => Number((b.eur_amount ?? b.amount) || 0) - Number((a.eur_amount ?? a.amount) || 0));
     document.getElementById("adminRows").innerHTML = sorted.length ? sorted.map(e => `
       <tr>
-        <td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${moneyOriginal(e.amount, e.currency)}</td>
-        <td>${safe(e.payment_method)}</td><td>${safe(e.pledge_date || "—")}</td><td>${safe(e.status || "Pending")}</td>
+        <td>${safe(e.name)}</td>
+        <td>${safe(e.district)}</td>
+        <td>${safe(e.locale)}</td>
+        <td>${moneyOriginal(e.amount, e.currency)}</td>
+        <td>${euro(e.eur_amount ?? e.amount)}</td>
+        <td>${safe(e.payment_method)}</td>
+        <td>${safe(e.pledge_date || "—")}</td>
+        <td>${safe(e.status || "Pending")}</td>
         <td>${e.proof ? `<button onclick="viewProof('${e.id}')">View</button>` : "—"}</td>
         <td>
           <button onclick="setStatus('${e.id}', 'Received')">Received</button>
