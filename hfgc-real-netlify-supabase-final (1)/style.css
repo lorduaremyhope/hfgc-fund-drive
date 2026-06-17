@@ -64,3 +64,28 @@ footer { text-align:center; padding:24px; color:var(--soft); }
 .export-actions button {
   padding: 12px 16px;
 }
+
+.bank-details label {
+  color: #111 !important;
+  font-weight: 800;
+}
+
+.bank-details input[type="file"] {
+  background: #ffffff;
+  color: #111;
+  border: 2px solid #6b1fb1;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.bank-details input[type="file"]::file-selector-button {
+  background: #6b1fb1;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-right: 12px;
+}
