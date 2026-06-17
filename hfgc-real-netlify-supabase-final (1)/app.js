@@ -16,6 +16,11 @@ const api = (path, options = {}) => fetch(`/api/${path}`, {
 function token() { return localStorage.getItem("hfgc_token") || ""; }
 function euro(n) { return "€" + Number(n || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function safe(v) { return String(v || "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c])); }
+
+function moneyOriginal(amount, currency) {
+  return `${safe(currency || "EUR")} ${Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 function buildDistrictOptions(selected="") { return Object.keys(districtLocales).map(d => `<option value="${safe(d)}" ${d===selected?"selected":""}>${safe(d)}</option>`).join(""); }
 function buildLocaleOptions(district, selected="") { return (districtLocales[district] || []).map(l => `<option value="${safe(l)}" ${l===selected?"selected":""}>${safe(l)}</option>`).join(""); }
 
@@ -183,14 +188,14 @@ async function renderPublicList() {
   }
 
   const sorted = entries.slice().sort((a,b) => {
-    if (mode === "highest") return Number(b.amount) - Number(a.amount);
-    if (mode === "lowest") return Number(a.amount) - Number(b.amount);
+    if (mode === "highest") return Number((b.eur_amount ?? b.amount) || 0) - Number((a.eur_amount ?? a.amount) || 0);
+    if (mode === "lowest") return Number((a.eur_amount ?? a.amount) || 0) - Number((b.eur_amount ?? b.amount) || 0);
     if (mode === "az") return a.name.localeCompare(b.name);
     if (mode === "za") return b.name.localeCompare(a.name);
-    return Number(b.amount) - Number(a.amount);
+    return Number((b.eur_amount ?? b.amount) || 0) - Number((a.eur_amount ?? a.amount) || 0);
   });
   tableHead.innerHTML = `<tr><th>Rank</th><th>Name</th><th>District</th><th>Locale</th><th>Original Amount</th><th>EUR Amount</th><th>Status</th></tr>`;
-  rowsEl.innerHTML = sorted.length ? sorted.map((e, i) => `<tr><td>${i+1}</td><td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${safe(e.currency || "EUR")} ${Number(e.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td><td>${euro(e.eur_amount ?? e.amount)}</td><td>${safe(e.status || "Pending")}</td></tr>`).join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
+  rowsEl.innerHTML = sorted.length ? sorted.map((e, i) => `<tr><td>${i+1}</td><td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${moneyOriginal(e.amount, e.currency)}</td><td>${euro(e.eur_amount ?? e.amount)}</td><td>${safe(e.status || "Pending")}</td></tr>`).join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
 }
 
 function initLoginPage() {
@@ -301,10 +306,10 @@ async function renderAdmin() {
     document.getElementById("progressStatus").textContent = settings.show_progress ? "Visible" : "Hidden";
     document.getElementById("leaderboardStatus").textContent = settings.show_leaderboard ? "Visible" : "Hidden";
 
-    const sorted = entries.slice().sort((a,b) => Number(b.amount) - Number(a.amount));
+    const sorted = entries.slice().sort((a,b) => Number((b.eur_amount ?? b.amount) || 0) - Number((a.eur_amount ?? a.amount) || 0));
     document.getElementById("adminRows").innerHTML = sorted.length ? sorted.map(e => `
       <tr>
-        <td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${euro(e.amount)}</td>
+        <td>${safe(e.name)}</td><td>${safe(e.district)}</td><td>${safe(e.locale)}</td><td>${moneyOriginal(e.amount, e.currency)}</td>
         <td>${safe(e.payment_method)}</td><td>${safe(e.pledge_date || "—")}</td><td>${safe(e.status || "Pending")}</td>
         <td>${e.proof ? `<button onclick="viewProof('${e.id}')">View</button>` : "—"}</td>
         <td>

@@ -34,3 +34,6 @@ set currency = coalesce(currency, 'EUR'),
     eur_amount = coalesce(eur_amount, amount),
     exchange_rate = coalesce(exchange_rate, 1)
 where eur_amount is null or currency is null or exchange_rate is null;
+
+
+-- Currency v2 top choices supported by app: GBP, EUR, USD, CHF, RUB, NOK, SEK, HUF, DKK.

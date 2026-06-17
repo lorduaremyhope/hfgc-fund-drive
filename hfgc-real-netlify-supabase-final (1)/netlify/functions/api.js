@@ -16,7 +16,10 @@ const fallbackRatesToEUR = {
   USD: 0.93,
   CHF: 1.05,
   RUB: 0.010,
-  NOK: 0.087
+  NOK: 0.087,
+  SEK: 0.087,
+  HUF: 0.0025,
+  DKK: 0.134
 };
 
 function requireEnv() {
