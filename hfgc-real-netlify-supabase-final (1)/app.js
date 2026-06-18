@@ -56,10 +56,20 @@ function groupTotals(entries, key) {
 
 function renderPaymentBreakdown(entries) {
   const methods = ["CASH", "BANK TRANSFER", "PLEDGE", "CHECK", "CARD", "OTHER"];
+  const getEurAmount = e => Number((e.eur_amount ?? e.amount) || 0);
+  const getMethod = e => String(e.payment_method || "OTHER").trim().toUpperCase();
+  const getStatus = e => String(e.status || "Pending").trim();
+
   document.getElementById("paymentBreakdownRows").innerHTML = methods.map(method => {
-    const received = entries.filter(e => e.payment_method === method && e.status === "Received").reduce((s,e)=>s+Number(e.amount||0),0);
-    const pending = entries.filter(e => e.payment_method === method && e.status !== "Received").reduce((s,e)=>s+Number(e.amount||0),0);
-    return `<tr><td>${safe(method)}</td><td>${euro(received)}</td><td>${euro(pending)}</td><td>${euro(received+pending)}</td></tr>`;
+    const received = entries
+      .filter(e => getMethod(e) === method && getStatus(e) === "Received")
+      .reduce((s, e) => s + getEurAmount(e), 0);
+
+    const pending = entries
+      .filter(e => getMethod(e) === method && getStatus(e) !== "Received")
+      .reduce((s, e) => s + getEurAmount(e), 0);
+
+    return `<tr><td>${safe(method)}</td><td>${euro(received)}</td><td>${euro(pending)}</td><td>${euro(received + pending)}</td></tr>`;
   }).join("");
 }
 
