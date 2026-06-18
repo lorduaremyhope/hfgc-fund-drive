@@ -9,3 +9,6 @@ Before deploying:
    SUPABASE_URL=https://ouhqxirsqmfczvzuysna.supabase.co
    SUPABASE_SERVICE_ROLE_KEY=your service_role key
 3. Deploy this folder to Netlify from GitHub/import project, not simple static-only upload.
+
+
+Update included: CAD - Canadian Dollar and PHP - Philippine Peso added to public form, admin manual add, and live converter currency dropdowns.
